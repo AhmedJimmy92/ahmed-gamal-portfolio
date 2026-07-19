@@ -6,8 +6,8 @@ import { projects } from "@/data/projects";
 
 export default function MotionGraphics() {
   const motionProjects = projects.filter(
-    (project) => project.category === "video-editing"
-  );
+  (project) => project.category === "motion-graphics"
+);
 
   return (
     <section className="py-28 px-6">
