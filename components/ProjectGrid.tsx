@@ -40,7 +40,7 @@ export default function ProjectGrid({
                 onClick={() => setSelected(project)}
                 className="group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-all duration-300 hover:-translate-y-2 hover:border-green-400/50"
               >
-                {project.category === "social-media" ? (
+                {project.category === "reels" ? (
                   <div className="relative aspect-square overflow-hidden">
                     <Image
                       src={project.thumbnail}
@@ -74,29 +74,15 @@ export default function ProjectGrid({
         </div>
       </section>
 
-      {selected &&
-        (selected.category === "social-media" ? (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-5"
-            onClick={() => setSelected(null)}
-          >
-            <Image
-              src={selected.thumbnail}
-              alt={selected.title}
-              width={1400}
-              height={1400}
-              className="max-h-[90vh] w-auto rounded-2xl"
-            />
-          </div>
-        ) : (
-          <ProjectModal
-            open={true}
-            project={selected}
-            projects={filtered}
-            onClose={() => setSelected(null)}
-            onChange={(project) => setSelected(project)}
-          />
-        ))}
+      {selected && (
+  <ProjectModal
+    open={true}
+    project={selected}
+    projects={filtered}
+    onClose={() => setSelected(null)}
+    onChange={(project) => setSelected(project)}
+  />
+)}
     </>
   );
 }
