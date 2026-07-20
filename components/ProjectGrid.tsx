@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { Play } from "lucide-react";
 import { projects, Project } from "@/data/projects";
 import ProjectModal from "./ProjectModal";
@@ -31,58 +30,65 @@ export default function ProjectGrid({
         className="py-28 px-6"
       >
         <div className="mx-auto max-w-7xl">
-          <SectionTitle title={title} highlight={highlight} />
+
+          <SectionTitle
+            title={title}
+            highlight={highlight}
+          />
 
           <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+
             {filtered.map((project) => (
+
               <div
                 key={project.id}
                 onClick={() => setSelected(project)}
                 className="group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-all duration-300 hover:-translate-y-2 hover:border-green-400/50"
               >
-                {project.category === "reels" ? (
-                  <div className="relative aspect-square overflow-hidden">
-                    <Image
-                      src={project.thumbnail}
-                      alt={project.title}
-                      fill
-                      className="object-cover transition duration-700 group-hover:scale-105"
-                    />
-                  </div>
-                ) : (
-                  <div className="relative aspect-[9/16] overflow-hidden bg-black">
-                    <video
-                      src={project.video}
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      preload="metadata"
-                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                    />
 
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/25 opacity-0 transition group-hover:opacity-100">
-                      <div className="rounded-full bg-green-500 p-4">
-                        <Play fill="black" className="text-black" />
-                      </div>
+                <div className="relative aspect-[9/16] overflow-hidden bg-black">
+
+                  <video
+                    src={project.video}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                  />
+
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/25 opacity-0 transition group-hover:opacity-100">
+
+                    <div className="rounded-full bg-green-500 p-4">
+                      <Play
+                        fill="black"
+                        className="text-black"
+                      />
                     </div>
+
                   </div>
-                )}
+
+                </div>
+
               </div>
+
             ))}
+
           </div>
+
         </div>
       </section>
 
       {selected && (
-  <ProjectModal
-    open={true}
-    project={selected}
-    projects={filtered}
-    onClose={() => setSelected(null)}
-    onChange={(project) => setSelected(project)}
-  />
-)}
+        <ProjectModal
+          open={true}
+          project={selected}
+          projects={filtered}
+          onClose={() => setSelected(null)}
+          onChange={(project) => setSelected(project)}
+        />
+      )}
     </>
   );
 }
