@@ -36,7 +36,7 @@ export default function ProjectGrid({
             highlight={highlight}
           />
 
-          <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid grid-cols-3 gap-3">
 
             {filtered.map((project) => (
 
@@ -46,7 +46,7 @@ export default function ProjectGrid({
                 className="group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-all duration-300 hover:-translate-y-2 hover:border-green-400/50"
               >
 
-                <div className="relative aspect-[9/16] overflow-hidden bg-black">
+                <div className="relative aspect-[9/16] overflow-hidden rounded-xl bg-black">
 
                   <video
                     src={project.video}
