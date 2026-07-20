@@ -27,24 +27,19 @@ export default function ProjectGrid({
     <>
       <section
         id={category === "reels" ? "portfolio" : undefined}
-        className="py-20 px-4 md:px-6"
+        className="py-28 px-6"
       >
         <div className="mx-auto max-w-7xl">
-          <SectionTitle
-            title={title}
-            highlight={highlight}
-          />
+          <SectionTitle title={title} highlight={highlight} />
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6">
-
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {filtered.map((project) => (
               <div
                 key={project.id}
                 onClick={() => setSelected(project)}
-                className="group cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-white/5 transition-all duration-300 hover:-translate-y-2 hover:border-green-400/50"
+                className="group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-all duration-300 hover:-translate-y-2 hover:border-green-400/50"
               >
-                <div className="relative aspect-[9/16] overflow-hidden rounded-xl bg-black">
-
+                <div className="relative aspect-[9/16] overflow-hidden bg-black rounded-xl">
                   <video
                     src={project.video}
                     autoPlay
@@ -55,22 +50,18 @@ export default function ProjectGrid({
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                   />
 
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/25 opacity-0 transition duration-300 group-hover:opacity-100">
-
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/25 opacity-0 transition group-hover:opacity-100">
                     <div className="rounded-full bg-green-500 p-3">
                       <Play
-                        size={20}
                         fill="black"
                         className="text-black"
+                        size={20}
                       />
                     </div>
-
                   </div>
-
                 </div>
               </div>
             ))}
-
           </div>
         </div>
       </section>
