@@ -1,5 +1,5 @@
 "use client";
-
+import VideoActions from "./VideoActions";
 import { useEffect, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
@@ -94,6 +94,8 @@ export default function ProjectModal({
             >
               <source src={project.video} type="video/mp4" />
             </video>
+            
+            <VideoActions projectId={project.id} />
 
             <div className="mt-5 text-center">
               <h2 className="text-2xl font-bold text-white">
