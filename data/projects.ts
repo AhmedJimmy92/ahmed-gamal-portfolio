@@ -1,13 +1,14 @@
 export interface Project {
   id: number;
+  order?: number;
   title: string;
   description: string;
   category:
-  | "reels"
-  | "travel"
-  | "motion-graphics"
-  | "commercial-ads"
-  | "ai-videos";
+    | "reels"
+    | "travel"
+    | "motion-graphics"
+    | "commercial-ads"
+    | "ai-videos";
   thumbnail: string;
   video: string;
   featured: boolean;
