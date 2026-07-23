@@ -112,14 +112,15 @@ export default function ProjectGrid({
                 <div className="relative aspect-[9/16] overflow-hidden rounded-xl bg-black">
 
                   <video
-                    src={video.video}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                  />
+  src={video.video}
+  poster={video.thumbnail}
+  autoPlay
+  muted
+  loop
+  playsInline
+  preload="none"
+  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+/>
 
                   <div className="absolute inset-0 flex items-center justify-center bg-black/25 opacity-0 transition group-hover:opacity-100">
 

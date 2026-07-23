@@ -21,6 +21,9 @@ export default function UploadVideo() {
   const saveVideo = async (result: any) => {
     if (!result?.info?.secure_url) return;
 
+console.log("CATEGORY:", category);
+console.log("ORDER:", order);
+
     setLoading(true);
 
     const q = query(
@@ -35,7 +38,10 @@ export default function UploadVideo() {
       const ref = snap.docs[0].ref;
 
       await updateDoc(ref, {
-        video: result.info.secure_url,
+        video: result.info.secure_url.replace(
+  "/upload/",
+  "/upload/f_auto,q_auto:good,vc_auto/"
+),
         thumbnail: result.info.thumbnail_url,
       });
     } else {
@@ -43,7 +49,10 @@ export default function UploadVideo() {
         title: `Video ${order}`,
         category,
         order,
-        video: result.info.secure_url,
+        video: result.info.secure_url.replace(
+  "/upload/",
+  "/upload/f_auto,q_auto:good,vc_auto/"
+),
         thumbnail: result.info.thumbnail_url,
         createdAt: Date.now(),
       });
@@ -65,6 +74,7 @@ export default function UploadVideo() {
         <option value="travel">Travel</option>
         <option value="motion-graphics">Motion Graphics</option>
         <option value="commercial-ads">Commercial Ads</option>
+        <option value="ai-videos">AI Videos</option>
       </select>
 
       <select
@@ -81,13 +91,14 @@ export default function UploadVideo() {
       </select>
 
       <CldUploadWidget
-        uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!}
-        options={{
-          resourceType: "video",
-          folder: "portfolio",
-        }}
-        onSuccess={(result) => saveVideo(result)}
-      >
+  key={`${category}-${order}`}
+  uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!}
+  options={{
+    resourceType: "video",
+    folder: "portfolio",
+  }}
+  onSuccess={(result) => saveVideo(result)}
+>
         {({ open }) => (
           <button
             onClick={() => open()}
