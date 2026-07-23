@@ -1,13 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  orderBy,
+} from "firebase/firestore";
+import { db } from "@/lib/firebase";
 import { Play } from "lucide-react";
-import { projects, Project } from "@/data/projects";
 import ProjectModal from "./ProjectModal";
 import SectionTitle from "./SectionTitle";
+import { projects } from "@/data/projects";
+
+interface VideoItem {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  order: number;
+  video: string;
+  thumbnail: string;
+}
 
 interface Props {
-  category: Project["category"];
+  category:
+    | "reels"
+    | "travel"
+    | "motion-graphics"
+    | "commercial-ads"
+    | "ai-videos";
+
   title: string;
   highlight: string;
 }
@@ -17,11 +41,50 @@ export default function ProjectGrid({
   title,
   highlight,
 }: Props) {
-  const [selected, setSelected] = useState<Project | null>(null);
+  const [videos, setVideos] = useState<any[]>([]);
+  const [selected, setSelected] = useState<any>(null);
 
-  const filtered = projects.filter(
-    (project) => project.category === category
-  );
+  useEffect(() => {
+    const loadVideos = async () => {
+      const localVideos = projects
+        .filter((p) => p.category === category)
+        .sort((a, b) => (a.order ?? a.id) - (b.order ?? b.id));
+
+      const q = query(
+        collection(db, "portfolioVideos"),
+        where("category", "==", category),
+        orderBy("order", "asc")
+      );
+
+      const snap = await getDocs(q);
+
+      const cloudVideos: any[] = [];
+
+      snap.forEach((doc) => {
+        cloudVideos.push(doc.data());
+      });
+
+      const merged = [...localVideos];
+
+      cloudVideos.forEach((cloud) => {
+        const index = merged.findIndex(
+          (x) => (x.order ?? x.id) === cloud.order
+        );
+
+        if (index !== -1) {
+          merged[index] = {
+            ...merged[index],
+            video: cloud.video,
+            thumbnail: cloud.thumbnail,
+          };
+        }
+      });
+
+      setVideos(merged);
+    };
+
+    loadVideos();
+  }, [category]);
 
   return (
     <>
@@ -30,18 +93,26 @@ export default function ProjectGrid({
         className="py-28 px-6"
       >
         <div className="mx-auto max-w-7xl">
-          <SectionTitle title={title} highlight={highlight} />
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {filtered.map((project) => (
+          <SectionTitle
+            title={title}
+            highlight={highlight}
+          />
+
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+
+            {videos.map((video) => (
+
               <div
-                key={project.id}
-                onClick={() => setSelected(project)}
+                key={video.id}
+                onClick={() => setSelected(video)}
                 className="group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-all duration-300 hover:-translate-y-2 hover:border-green-400/50"
               >
-                <div className="relative aspect-[9/16] overflow-hidden bg-black rounded-xl">
+
+                <div className="relative aspect-[9/16] overflow-hidden rounded-xl bg-black">
+
                   <video
-                    src={project.video}
+                    src={video.video}
                     autoPlay
                     muted
                     loop
@@ -51,28 +122,38 @@ export default function ProjectGrid({
                   />
 
                   <div className="absolute inset-0 flex items-center justify-center bg-black/25 opacity-0 transition group-hover:opacity-100">
+
                     <div className="rounded-full bg-green-500 p-3">
+
                       <Play
+                        size={20}
                         fill="black"
                         className="text-black"
-                        size={20}
                       />
+
                     </div>
+
                   </div>
+
                 </div>
+
               </div>
+
             ))}
+
           </div>
+
         </div>
+
       </section>
 
       {selected && (
         <ProjectModal
           open={true}
           project={selected}
-          projects={filtered}
+          projects={videos}
           onClose={() => setSelected(null)}
-          onChange={(project) => setSelected(project)}
+          onChange={(video) => setSelected(video)}
         />
       )}
     </>

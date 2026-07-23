@@ -1,12 +1,13 @@
 "use client";
 import { useRouter } from "next/navigation";
-
+import UploadVideo from "@/components/UploadVideo";
 import { useEffect, useState } from "react";
 import {
   collection,
   getDocs,
   doc,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
@@ -14,6 +15,8 @@ interface VideoData {
   id: string;
   views: number;
   likes: number;
+  category?: string;
+  order?: number;
 }
 
 export default function AdminPage() {
@@ -29,13 +32,15 @@ const [logged, setLogged] = useState(false);
     const data: VideoData[] = [];
 
     snap.forEach((item) => {
-      data.push({
-        id: item.id,
-        ...(item.data() as {
-          views: number;
-          likes: number;
-        }),
-      });
+      const d = item.data();
+
+data.push({
+  id: item.id,
+  views: d.views || 0,
+  likes: d.likes || 0,
+  category: d.category || "",
+  order: d.order || Number(item.id),
+});
     });
 
     data.sort((a, b) => Number(a.id) - Number(b.id));
@@ -67,6 +72,13 @@ const [logged, setLogged] = useState(false);
 
     loadVideos();
   };
+  const deleteVideo = async (id: string) => {
+  if (!confirm("Delete this video?")) return;
+
+  await deleteDoc(doc(db, "portfolioVideos", id));
+
+  loadVideos();
+};
     if (!logged) {
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#050505] px-6">
@@ -108,8 +120,12 @@ return (
       <div className="mx-auto max-w-5xl">
 
         <h1 className="mb-10 text-4xl font-black">
-          Portfolio Dashboard
-        </h1>
+  Portfolio Dashboard
+</h1>
+
+<div className="mb-8 flex justify-end">
+  <UploadVideo />
+</div>
 
         <div className="overflow-hidden rounded-3xl border border-white/10">
 
@@ -149,7 +165,13 @@ return (
                 >
 
                   <td className="p-5">
-                    Video {video.id}
+                    <div className="font-bold">
+  {video.category || "Reels"}
+</div>
+
+<div className="text-sm text-gray-400">
+  Video {video.order || video.id}
+</div>
                   </td>
 
                   <td className="p-5 text-center font-bold text-green-400">
@@ -162,7 +184,7 @@ return (
 
                   <td className="p-5">
 
-                    <div className="flex justify-center gap-3">
+                    <div className="flex flex-wrap justify-center gap-2">
 
                       <button
                         onClick={() => resetViews(video.id)}
@@ -176,6 +198,12 @@ return (
                         className="rounded-xl bg-red-500 px-4 py-2 font-semibold"
                       >
                         Reset Likes
+                        <button
+  onClick={() => deleteVideo(video.id)}
+  className="rounded-xl bg-red-700 px-4 py-2 font-semibold hover:bg-red-600"
+>
+  Delete
+</button>
                       </button>
 
                     </div>

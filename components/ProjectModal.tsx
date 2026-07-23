@@ -1,16 +1,25 @@
 "use client";
-import VideoActions from "./VideoActions";
-import { useEffect, useMemo } from "react";
+
 import { AnimatePresence, motion } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
-import { Project } from "@/data/projects";
+import VideoActions from "./VideoActions";
 
-interface ProjectModalProps {
+interface VideoItem {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  order: number;
+  video: string;
+  thumbnail: string;
+}
+
+interface Props {
   open: boolean;
   onClose: () => void;
-  project: Project;
-  projects: Project[];
-  onChange: (project: Project) => void;
+  project: VideoItem;
+  projects: VideoItem[];
+  onChange: (project: VideoItem) => void;
 }
 
 export default function ProjectModal({
@@ -19,11 +28,10 @@ export default function ProjectModal({
   project,
   projects,
   onChange,
-}: ProjectModalProps) {
+}: Props) {
 
-  const currentIndex = useMemo(
-    () => projects.findIndex((p) => p.id === project.id),
-    [project, projects]
+  const currentIndex = projects.findIndex(
+    (p) => p.id === project.id
   );
 
   const nextProject = () => {
@@ -32,23 +40,13 @@ export default function ProjectModal({
   };
 
   const prevProject = () => {
-    const prev = (currentIndex - 1 + projects.length) % projects.length;
+    const prev =
+      (currentIndex - 1 + projects.length) %
+      projects.length;
+
     onChange(projects[prev]);
   };
-
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-      if (e.key === "ArrowRight") nextProject();
-      if (e.key === "ArrowLeft") prevProject();
-    };
-
-    window.addEventListener("keydown", handleKey);
-
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [currentIndex]);
-
-  return (
+    return (
     <AnimatePresence>
       {open && (
         <motion.div
@@ -94,17 +92,18 @@ export default function ProjectModal({
             >
               <source src={project.video} type="video/mp4" />
             </video>
-            
-            <VideoActions projectId={project.id} />
 
-            <div className="mt-5 text-center">
+            <VideoActions projectId={Number(project.order)} />
+                        <div className="mt-5 text-center">
+
               <h2 className="text-2xl font-bold text-white">
-                {project.title}
+                {project.title || `Video ${project.order}`}
               </h2>
 
               <p className="mt-2 text-gray-400">
                 {currentIndex + 1} / {projects.length}
               </p>
+
             </div>
 
           </motion.div>
