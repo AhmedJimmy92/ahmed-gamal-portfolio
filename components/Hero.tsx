@@ -25,14 +25,14 @@ export default function Hero() {
       <div className="absolute -left-40 top-20 h-96 w-96 rounded-full bg-green-500/20 blur-[140px]" />
       <div className="absolute -right-40 bottom-20 h-96 w-96 rounded-full bg-emerald-500/10 blur-[160px]" />
 
-      <div className="relative z-10 mx-auto flex min-h-[80vh] max-w-7xl flex-row items-center justify-between gap-8 px-5 sm:px-8">
+      <div className="relative z-10 mx-auto flex min-h-[80vh] max-w-7xl flex-col-reverse items-center justify-center gap-10 px-5 sm:px-8 lg:flex-row lg:justify-between">
 
         {/* Left */}
         <motion.div
           initial={{ opacity: 0, x: -80 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          className="flex-1"
+          className="flex-1 text-center lg:text-left"
         >
           <p className="mb-3 uppercase tracking-[6px] text-green-400 text-xs sm:text-sm">
             Portfolio
@@ -48,7 +48,7 @@ export default function Hero() {
             AI videos and premium visual storytelling.
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
 
             <a
               href="#portfolio"
@@ -78,13 +78,20 @@ export default function Hero() {
 
           <div className="relative overflow-hidden rounded-[30px] border border-white/10 bg-white/5 p-2 backdrop-blur-2xl">
             <Image
-              src="/images/ahmed.jpg"
-              alt="Ahmed Gamal"
-              width={380}
-              height={500}
-              className="rounded-[24px] object-cover w-[140px] sm:w-[220px] lg:w-[380px]"
-              priority
-            />
+  src="/images/ahmed.jpg"
+  alt="Ahmed Gamal"
+  width={450}
+  height={600}
+  priority
+  className="
+    w-[240px]
+    sm:w-[300px]
+    lg:w-[420px]
+    h-auto
+    rounded-[24px]
+    object-cover
+  "
+/>
           </div>
         </motion.div>
 
